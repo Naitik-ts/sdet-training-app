@@ -166,15 +166,42 @@ test("create profile form", async ({ page }) => {
     .filter({ has: page.getByText("Country") });
   await expect(countryContainer).toBeVisible();
 
-  //bio container
+  const dropdownTriggerBtn = countryContainer
+    .getByRole("combobox")
+    .and(page.locator("button"));
+  await expect(dropdownTriggerBtn).toBeVisible();
+
+  const dropdownBtnText = await dropdownTriggerBtn.textContent();
+  expect(dropdownBtnText).toBe("Select a verified email to display");
+
+  await dropdownTriggerBtn.click();
+
+  const dropdownList = page.locator("[data-radix-select-viewport]");
+  await expect(dropdownList).toBeVisible();
+
+  const dropdownOptions = dropdownList.getByRole("option");
+  await expect(dropdownOptions).toHaveCount(3);
+
+  const firstOption = dropdownOptions.first();
+  await expect(firstOption).toBeVisible();
+  await firstOption.click();
+  await expect(dropdownTriggerBtn).toHaveText("India");
+
+  // const secondOption = dropdownOptions.last();
+  // await expect(secondOption).toBeVisible();
+  // await secondOption.click();
+  // await expect(dropdownTriggerBtn).toHaveText("UK");
+
+  // bio container
   const bioContainer = formLocator
     .locator("div")
-    .filter({ has: page.getByText("Bio") });
+    .filter({ has: page.getByLabel("Bio") });
   await expect(bioContainer).toBeVisible();
 
-  const bioTextArea = bioContainer.locator("textarea");
+  const bioTextArea = bioContainer.getByLabel("Bio");
   await expect(bioTextArea).toBeVisible();
-  await bioContainer.focus();
-  await bioContainer.fill("I am sdet");
-  await expect(bioContainer).toContainText("I am sdet");
+  // await bioContainer.focus();
+  // await bioTextArea.click();
+  await bioTextArea.fill("I am sdet");
+  await expect(bioTextArea).toHaveValue("I am sdet");
 });
