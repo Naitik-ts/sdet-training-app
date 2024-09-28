@@ -134,4 +134,51 @@ test("create profile form", async ({ page }) => {
   await expect(usernameLabel).toHaveValue("One Piece");
 
   await expect(usernameContainerMinCharErrorLocator).not.toBeVisible();
+
+  //naitik-task from notify container
+  const notifyContainer = formLocator
+    .locator("div")
+    .filter({ has: page.getByText("Notify me about...") });
+
+  await expect(notifyContainer).toBeVisible();
+
+  const notifyradiodiv = notifyContainer.getByRole("radiogroup");
+
+  const notifyContainerRadioBtns = notifyradiodiv.getByRole("radio");
+  // .and(page.locator("button"));
+  await expect(notifyContainerRadioBtns).toHaveCount(3);
+
+  const radio1 = notifyContainerRadioBtns.first();
+  await expect(radio1).toBeVisible();
+
+  // const radio2 = notifyContainerRadioBtns.getByText(
+  //   "Direct messages and mentions"
+  // );
+  const radio2 = notifyContainerRadioBtns.nth(1);
+  await expect(radio2).toBeVisible();
+
+  const radio3 = notifyContainerRadioBtns.last();
+  await expect(radio3).toBeVisible();
+
+  //country container
+  const countryContainer = formLocator
+    .locator("div")
+    .filter({ has: page.getByText("Country") });
+  await expect(countryContainer).toBeVisible();
+
+  const preOptions = ["India", "USA", "UK"];
+  const countryContainerSelectOptions = countryContainer.locator("select");
+  // .selectOption(["India", "USA", "UK"])
+
+  const spanText = countryContainer.locator("span");
+
+  for (const singleOption of preOptions) {
+    await countryContainerSelectOptions.selectOption(singleOption);
+    await expect(spanText).toHaveText(singleOption);
+    console.log(await countryContainerSelectOptions.inputValue());
+    await expect(countryContainerSelectOptions).toHaveValue(
+      await countryContainerSelectOptions.inputValue()
+    );
+  }
+  // await expect(spanText).toHaveText("USA");
 });

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("test register link", async ({ page, browser }) => {
+test("test register link", async ({ page }) => {
   await page.goto("http://localhost:3000");
 
   const registerLink = page.getByRole("link", { name: "Register" });
