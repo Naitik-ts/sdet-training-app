@@ -166,19 +166,15 @@ test("create profile form", async ({ page }) => {
     .filter({ has: page.getByText("Country") });
   await expect(countryContainer).toBeVisible();
 
-  const preOptions = ["India", "USA", "UK"];
-  const countryContainerSelectOptions = countryContainer.locator("select");
-  // .selectOption(["India", "USA", "UK"])
+  //bio container
+  const bioContainer = formLocator
+    .locator("div")
+    .filter({ has: page.getByText("Bio") });
+  await expect(bioContainer).toBeVisible();
 
-  const spanText = countryContainer.locator("span");
-
-  for (const singleOption of preOptions) {
-    await countryContainerSelectOptions.selectOption(singleOption);
-    await expect(spanText).toHaveText(singleOption);
-    console.log(await countryContainerSelectOptions.inputValue());
-    await expect(countryContainerSelectOptions).toHaveValue(
-      await countryContainerSelectOptions.inputValue()
-    );
-  }
-  // await expect(spanText).toHaveText("USA");
+  const bioTextArea = bioContainer.locator("textarea");
+  await expect(bioTextArea).toBeVisible();
+  await bioContainer.focus();
+  await bioContainer.fill("I am sdet");
+  await expect(bioContainer).toContainText("I am sdet");
 });
